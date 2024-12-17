@@ -30,8 +30,30 @@ const userController = {
         }
 
     },
-    signin: function(req, res){
+    signin: async (req, res) => {
 
+        const { email, password } = req.body
+
+        try{
+            const existingUser = await userModel.findOne({ email: email})
+
+            if(!existingUser) {
+                return res.status(404).json({ message: "User does not exist "})
+            }
+
+            const matchedPassword = await bcrypt.compare(password, existingUser.password)
+
+            if(!matchedPassword){
+                return res.status(400).json({ message: "Invalid credentials" })
+            }
+
+            const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, userController.SECRECT_KEY)
+            res.status(200).json({user: existingUser, token: token})
+
+        }catch(err){
+            console.log(err)
+            res.status(500).json({message: err.message})
+        }
     }
 }
 
