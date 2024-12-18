@@ -6,6 +6,11 @@ import dbConnect from './db/dbConnect.js'
 
 const app = express()
 
+app.use((req, res, next)=>{
+    console.log(`Method ${req.method}, URL: ${req.url} `)
+    next()
+})
+
 app.use(express.json())
 
 app.use('/user', userRouter)
