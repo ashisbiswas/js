@@ -1,9 +1,9 @@
 import userModel from '../models/user.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 
 const userController = {
-    SECRECT_KEY: 'ashisbiswas',
     signup: async (req, res)=> {
 
         const {username, password, email} = req.body
@@ -21,7 +21,7 @@ const userController = {
                 username: username
             })
 
-            const token = jwt.sign({ email: result.email, id: result._id }, userController.SECRECT_KEY)
+            const token = jwt.sign({ email: result.email, id: result._id }, process.env.SECRET_KEY)
             res.status(201).json({user: result, token: token})
 
         } catch (err) {
@@ -47,7 +47,7 @@ const userController = {
                 return res.status(400).json({ message: "Invalid credentials" })
             }
 
-            const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, userController.SECRECT_KEY)
+            const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, process.env.SECRECT_KEY)
             res.status(200).json({user: existingUser, token: token})
 
         }catch(err){

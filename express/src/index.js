@@ -1,4 +1,5 @@
 import express from 'express'
+import 'dotenv/config'
 import userRouter from './routes/userRoutes.js'
 import noteRouter from './routes/noteRoutes.js'
 import dbConnect from './db/dbConnect.js'
@@ -19,9 +20,9 @@ app.use('/note', noteRouter)
 
 const start = async () => {
     try {
-        await dbConnect()
-        app.listen(4000, () =>{
-            console.log(`Server started on http://localhost:4000`)
+        await dbConnect(process.env.MONGO_URL)
+        app.listen(process.env.PORT, () =>{
+            console.log(`Server started on http://localhost:${process.env.PORT}`)
         })
     } catch (err) {
         console.error(err)
